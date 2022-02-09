@@ -1,34 +1,27 @@
 import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {useDispatch} from 'react-redux';
-import {COLORS, SIZES} from './src/constants';
-import {fetchDataPost} from './src/features/postSlice';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import Authentication from './src/navigations/Authentication';
+import TabNavigation from './src/navigations/TabNavigation';
+const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(fetchDataPost());
-  }, [dispatch]);
   return (
     <NavigationContainer>
-      <View style={styles.container}>
-        <ScrollView></ScrollView>
-      </View>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="auth"
+          component={Authentication}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="rootApp"
+          component={TabNavigation}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-  title: {
-    color: COLORS.black,
-    fontSize: SIZES.h2,
-  },
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
