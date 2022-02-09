@@ -10,7 +10,16 @@ import {
 import {ListSocialButton} from '../../../components';
 import {COLORS, SIZES} from '../../../constants';
 
-const Login = () => {
+export interface LoginProps {
+  navigation: any;
+}
+const Login = ({navigation}: LoginProps) => {
+  const navigateToRegisterScreens = () => {
+    navigation.navigate('Register');
+  };
+  const navigateToHome = () => {
+    navigation.navigate('rootApp');
+  };
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView>
@@ -22,7 +31,7 @@ const Login = () => {
           placeholder="Vui lòng nhập password"
           style={styles.viewInput}
         />
-        <TouchableOpacity style={styles.loginButton}>
+        <TouchableOpacity style={styles.loginButton} onPress={navigateToHome}>
           <Text style={styles.txtLogin}>Đăng nhập</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.forgotButton}>
@@ -34,7 +43,9 @@ const Login = () => {
         <ListSocialButton />
         <View style={styles.viewAccount}>
           <Text>Chưa có tài khoản?</Text>
-          <TouchableOpacity style={styles.btnRegister}>
+          <TouchableOpacity
+            style={styles.btnRegister}
+            onPress={navigateToRegisterScreens}>
             <Text style={styles.txtRegis}>Đăng ký ngay</Text>
           </TouchableOpacity>
         </View>

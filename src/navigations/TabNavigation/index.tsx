@@ -1,5 +1,7 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {ParamListBase, RouteProp} from '@react-navigation/native';
 import React from 'react';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {
   Account,
   Explore,
@@ -7,12 +9,11 @@ import {
   Home,
   Reservation,
 } from '../../features/flightbooking/screens';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Tab = createBottomTabNavigator();
 
 const screenOptions = (
-  route: any,
+  route: RouteProp<ParamListBase, string>,
   color: string,
   focused: boolean,
   size: number,
