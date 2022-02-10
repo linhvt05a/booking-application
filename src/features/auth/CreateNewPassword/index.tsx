@@ -1,41 +1,52 @@
+import {Formik} from 'formik';
+import React from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
 } from 'react-native';
-import React from 'react';
-import {Formik} from 'formik';
-import {LoginForm} from '../SignIn';
-import {COLORS, SIZES} from '../../../constants';
 import * as yup from 'yup';
+import {COLORS, SIZES} from '../../../constants';
 
 const loginValidationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Please enter valid email')
-    .required('Email Address is Required'),
   password: yup
     .string()
+    .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
+    .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
+    .matches(/\d/, 'Password must have a number')
+    .matches(
+      /[!@#$%^&*()\-_"=+{}; :,<.>]/,
+      'Password must have a special character',
+    )
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref('password')], 'Passwords do not match')
+    .required('Confirm password is required'),
 });
 export interface CreateNewPasswordProps {
   navigation: any;
 }
+export interface CreatePasswordForm {
+  password: string;
+  confirmPassword: string;
+}
 const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
-  const navigateToLogin = (values: LoginForm) => {
-    navigation.navigate('Login');
+  const navigateToLogin = (values: CreatePasswordForm) => {
+    Alert.alert('Tạo mật khẩu thành công. Vui lòng đăng nhập để sử dụng');
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <KeyboardAvoidingView>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: '', password: ''}}
-          onSubmit={(values: LoginForm) => navigateToLogin(values)}>
+          initialValues={{confirmPassword: '', password: ''}}
+          onSubmit={(values: CreatePasswordForm) => navigateToLogin(values)}>
           {({
             handleChange,
             handleBlur,
@@ -46,19 +57,11 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập email hoặc SĐT"
-                style={styles.viewInput}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
-              />
-              {errors.email && (
-                <Text style={styles.errorsText}>{errors.email}</Text>
-              )}
-              <TextInput
-                placeholder="Vui lòng nhập password"
-                style={styles.viewInput}
+                placeholder="Mật khẩu ít nhất 8 ký tự "
+                style={[
+                  styles.viewInput,
+                  errors.password ? styles.errorsInput : null,
+                ]}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
@@ -66,6 +69,20 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
               />
               {errors.password && (
                 <Text style={styles.errorsText}>{errors.password}</Text>
+              )}
+              <TextInput
+                placeholder=" Nhập lại mật khẩu mới"
+                style={[
+                  styles.viewInput,
+                  errors.confirmPassword ? styles.errorsInput : null,
+                ]}
+                onChangeText={handleChange('confirmPassword')}
+                onBlur={handleBlur('confirmPassword')}
+                value={values.confirmPassword}
+                secureTextEntry
+              />
+              {errors.confirmPassword && (
+                <Text style={styles.errorsText}>{errors.confirmPassword}</Text>
               )}
               <TouchableOpacity
                 style={styles.loginButton}
@@ -115,5 +132,9 @@ const styles = StyleSheet.create({
   errorsText: {
     fontSize: SIZES.h4,
     color: COLORS.red,
+  },
+  errorsInput: {
+    borderWidth: 1,
+    borderColor: COLORS.red,
   },
 });

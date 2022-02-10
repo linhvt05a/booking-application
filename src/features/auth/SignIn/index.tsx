@@ -20,6 +20,13 @@ const loginValidationSchema = yup.object().shape({
     .required('Email Address is Required'),
   password: yup
     .string()
+    .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
+    .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
+    .matches(/\d/, 'Password must have a number')
+    .matches(
+      /[!@#$%^&*()\-_"=+{}; :,<.>]/,
+      'Password must have a special character',
+    )
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),
 });
@@ -59,7 +66,10 @@ const Login = ({navigation}: LoginProps) => {
             <>
               <TextInput
                 placeholder="Vui lòng nhập email hoặc SĐT"
-                style={styles.viewInput}
+                style={[
+                  styles.viewInput,
+                  errors.email ? styles.errorsInput : null,
+                ]}
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
                 value={values.email}
@@ -70,7 +80,10 @@ const Login = ({navigation}: LoginProps) => {
               )}
               <TextInput
                 placeholder="Vui lòng nhập password"
-                style={styles.viewInput}
+                style={[
+                  styles.viewInput,
+                  errors.password ? styles.errorsInput : null,
+                ]}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
@@ -178,5 +191,9 @@ const styles = StyleSheet.create({
   errorsText: {
     fontSize: SIZES.h4,
     color: COLORS.red,
+  },
+  errorsInput: {
+    borderWidth: 1,
+    borderColor: COLORS.red,
   },
 });

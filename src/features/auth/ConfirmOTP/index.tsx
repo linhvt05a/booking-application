@@ -1,14 +1,65 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../../constants';
+import {
+  CodeField,
+  Cursor,
+  useBlurOnFulfill,
+  useClearByFocusCell,
+} from 'react-native-confirmation-code-field';
 
+const CELL_COUNT = 6;
+const RESEND_OTP_TIME_LIMIT = 60;
 export interface ConfirmOTPProps {
   navigation: any;
 }
 const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
+  let resendOtpTimerInterval: any;
+  const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
+    RESEND_OTP_TIME_LIMIT,
+  );
+  //to start resent otp option
+  const startResendOtpTimer = () => {
+    if (resendOtpTimerInterval) {
+      clearInterval(resendOtpTimerInterval);
+    }
+    resendOtpTimerInterval = setInterval(() => {
+      if (resendButtonDisabledTime <= 0) {
+        clearInterval(resendOtpTimerInterval);
+      } else {
+        setResendButtonDisabledTime(resendButtonDisabledTime - 1);
+      }
+    }, 1000);
+  };
+  //on click of resend button
+  const onResendOtpButtonPress = () => {
+    //clear input field
+    setValue('');
+    setResendButtonDisabledTime(RESEND_OTP_TIME_LIMIT);
+    startResendOtpTimer();
+
+    // resend OTP Api call
+    // todo
+    console.log('todo: Resend OTP');
+  };
+  const [value, setValue] = useState('');
+  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const [props, getCellOnLayoutHandler] = useClearByFocusCell({
+    value,
+    setValue,
+  });
   const navigateToCreateNewPassword = () => {
     navigation.navigate('CreateNewPassword');
   };
+  useEffect(() => {
+    startResendOtpTimer();
+    return () => {
+      if (resendOtpTimerInterval) {
+        clearInterval(resendOtpTimerInterval);
+      }
+    };
+  }, [resendButtonDisabledTime]);
+
   return (
     <View style={styles.container}>
       <Text>Bạn hãy nhập mã OTP được gửi đến số điện thoại: </Text>
@@ -18,11 +69,40 @@ const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
           <Text style={styles.txtChangePhone}>Đổi số khác</Text>
         </TouchableOpacity>
       </View>
+      <CodeField
+        ref={ref}
+        {...props}
+        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
+        value={value}
+        onChangeText={setValue}
+        cellCount={CELL_COUNT}
+        rootStyle={styles.codeFieldRoot}
+        keyboardType="number-pad"
+        textContentType="oneTimeCode"
+        renderCell={({index, symbol, isFocused}) => (
+          <Text
+            key={index}
+            style={[styles.cell, isFocused && styles.focusCell]}
+            onLayout={getCellOnLayoutHandler(index)}>
+            {symbol || (isFocused ? <Cursor /> : null)}
+          </Text>
+        )}
+      />
       <TouchableOpacity
         style={styles.confirmButton}
         onPress={navigateToCreateNewPassword}>
         <Text>Tiếp tục</Text>
       </TouchableOpacity>
+      {/* View for resend otp  */}
+      {resendButtonDisabledTime > 0 ? (
+        <Text>Gửi lại mã ({resendButtonDisabledTime}) giây</Text>
+      ) : (
+        <TouchableOpacity onPress={onResendOtpButtonPress}>
+          <View style={styles.resendCodeContainer}>
+            <Text>Gửi lại mã</Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -57,5 +137,36 @@ const styles = StyleSheet.create({
     fontSize: SIZES.h4,
     fontWeight: '600',
     color: COLORS.black,
+  },
+  root: {flex: 1, padding: 20},
+  title: {textAlign: 'center', fontSize: 30},
+  codeFieldRoot: {marginTop: 20},
+  cell: {
+    width: 40,
+    height: 40,
+    lineHeight: 38,
+    fontSize: SIZES.body3,
+    color: COLORS.black,
+    borderWidth: 1,
+    borderColor: '#00000030',
+    textAlign: 'center',
+    borderRadius: 4,
+    marginHorizontal: 4,
+  },
+  focusCell: {
+    borderColor: '#000',
+  },
+  resendCode: {
+    color: COLORS.blue,
+    marginStart: 20,
+    marginTop: 40,
+  },
+  resendCodeText: {
+    marginStart: 20,
+    marginTop: 40,
+  },
+  resendCodeContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
