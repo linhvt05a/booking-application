@@ -1,3 +1,4 @@
+import {Formik} from 'formik';
 import React from 'react';
 import {
   KeyboardAvoidingView,
@@ -6,35 +7,91 @@ import {
   TextInput,
   View,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import {ListSocialButton} from '../../../components';
 import {COLORS, SIZES} from '../../../constants';
+import * as yup from 'yup';
 
+const loginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Please enter valid email')
+    .required('Email Address is Required'),
+  password: yup
+    .string()
+    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .required('Password is required'),
+});
 export interface LoginProps {
   navigation: any;
+}
+export interface LoginForm {
+  email: string;
+  password: string;
 }
 const Login = ({navigation}: LoginProps) => {
   const navigateToRegisterScreens = () => {
     navigation.navigate('Register');
   };
-  const navigateToHome = () => {
+  const navigateToHome = (values: LoginForm) => {
+    console.log(values);
     navigation.navigate('rootApp');
   };
+  const navigateToForgotPassword = () => {
+    navigation.navigate('ForgotPassword');
+  };
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <KeyboardAvoidingView>
-        <TextInput
-          placeholder="Vui lòng nhập email hoặc SĐT"
-          style={styles.viewInput}
-        />
-        <TextInput
-          placeholder="Vui lòng nhập password"
-          style={styles.viewInput}
-        />
-        <TouchableOpacity style={styles.loginButton} onPress={navigateToHome}>
-          <Text style={styles.txtLogin}>Đăng nhập</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.forgotButton}>
+        <Formik
+          validationSchema={loginValidationSchema}
+          initialValues={{email: '', password: ''}}
+          onSubmit={(values: LoginForm) => navigateToHome(values)}>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+          }) => (
+            <>
+              <TextInput
+                placeholder="Vui lòng nhập email hoặc SĐT"
+                style={styles.viewInput}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+                keyboardType="email-address"
+              />
+              {errors.email && (
+                <Text style={styles.errorsText}>{errors.email}</Text>
+              )}
+              <TextInput
+                placeholder="Vui lòng nhập password"
+                style={styles.viewInput}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+                secureTextEntry
+              />
+              {errors.password && (
+                <Text style={styles.errorsText}>{errors.password}</Text>
+              )}
+              <TouchableOpacity
+                style={styles.loginButton}
+                onPress={handleSubmit}
+                disabled={!isValid}>
+                <Text style={styles.txtLogin}>Đăng nhập</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+
+        <TouchableOpacity
+          style={styles.forgotButton}
+          onPress={navigateToForgotPassword}>
           <Text style={styles.txtForgot}>Bạn quên mật khẩu?</Text>
         </TouchableOpacity>
         <View style={styles.viewText}>
@@ -50,7 +107,7 @@ const Login = ({navigation}: LoginProps) => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -58,7 +115,6 @@ export default Login;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: COLORS.blue,
@@ -118,5 +174,9 @@ const styles = StyleSheet.create({
   txtRegis: {
     color: COLORS.blue,
     textDecorationLine: 'underline',
+  },
+  errorsText: {
+    fontSize: SIZES.h4,
+    color: COLORS.red,
   },
 });

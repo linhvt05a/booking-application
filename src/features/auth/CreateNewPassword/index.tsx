@@ -1,15 +1,14 @@
-import {Formik} from 'formik';
-import React from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {ListSocialButton} from '../../../components';
+import React from 'react';
+import {Formik} from 'formik';
+import {LoginForm} from '../SignIn';
 import {COLORS, SIZES} from '../../../constants';
 import * as yup from 'yup';
 
@@ -23,17 +22,10 @@ const loginValidationSchema = yup.object().shape({
     .min(8, ({min}) => `Password must be at least ${min} characters`)
     .required('Password is required'),
 });
-export interface LoginProps {
+export interface CreateNewPasswordProps {
   navigation: any;
 }
-export interface LoginForm {
-  email: string;
-  password: string;
-}
-const Register = ({navigation}: LoginProps) => {
-  const navigateToRegisterScreens = () => {
-    navigation.navigate('Login');
-  };
+const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
   const navigateToLogin = (values: LoginForm) => {
     navigation.navigate('Login');
   };
@@ -79,41 +71,22 @@ const Register = ({navigation}: LoginProps) => {
                 style={styles.loginButton}
                 onPress={handleSubmit}
                 disabled={!isValid}>
-                <Text style={styles.txtLogin}>Đăng ký</Text>
+                <Text style={styles.txtLogin}>Tạo mật khẩu mới</Text>
               </TouchableOpacity>
             </>
           )}
         </Formik>
-
-        <TouchableOpacity style={styles.forgotButton}>
-          <Text style={styles.txtForgot}>
-            Bằng việc Đăng ký, bạn đã đồng ý với Điều khoản sử dụng của Chợ tốt
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.viewText}>
-          <Text style={styles.txtLoginWith}>hoặc sử dụng</Text>
-        </View>
-        <ListSocialButton />
-        <View style={styles.viewAccount}>
-          <Text>Bạn đã có tài khoản?</Text>
-          <TouchableOpacity
-            style={styles.btnRegister}
-            onPress={navigateToRegisterScreens}>
-            <Text style={styles.txtRegis}>Đăng nhập</Text>
-          </TouchableOpacity>
-        </View>
       </KeyboardAvoidingView>
     </ScrollView>
   );
 };
 
-export default Register;
+export default CreateNewPassword;
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: COLORS.blue,
   },
   viewInput: {
     width: SIZES.width - 32,
@@ -138,38 +111,6 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: SIZES.h4,
     fontWeight: '600',
-  },
-  forgotButton: {
-    width: SIZES.width - 36,
-    marginVertical: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  txtForgot: {
-    color: COLORS.blue,
-    fontSize: SIZES.h4,
-    fontWeight: '600',
-  },
-  txtLoginWith: {
-    color: COLORS.gray,
-    fontSize: SIZES.h4,
-  },
-  viewText: {
-    alignSelf: 'center',
-    marginVertical: 30,
-  },
-  viewAccount: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignSelf: 'center',
-    marginVertical: 25,
-  },
-  btnRegister: {
-    paddingHorizontal: 5,
-  },
-  txtRegis: {
-    color: COLORS.blue,
-    textDecorationLine: 'underline',
   },
   errorsText: {
     fontSize: SIZES.h4,
