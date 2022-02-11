@@ -1,23 +1,27 @@
 import {Formik} from 'formik';
 import React from 'react';
 import {
+  Alert,
   KeyboardAvoidingView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from 'react-native';
+import * as yup from 'yup';
 import {ListSocialButton} from '../../../components';
 import {COLORS, SIZES} from '../../../constants';
-import * as yup from 'yup';
 
 const loginValidationSchema = yup.object().shape({
-  email: yup
+  phone: yup
     .string()
-    .email('Please enter valid email')
-    .required('Email Address is Required'),
+    .matches(
+      /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+      'Số điện thoại chưa đúng định dạng',
+    )
+    .required('Vui lòng nhập số điện thoại'),
   password: yup
     .string()
     .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
@@ -28,13 +32,13 @@ const loginValidationSchema = yup.object().shape({
       'Password must have a special character',
     )
     .min(8, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password is required'),
+    .required('Vui lòng nhập mật khẩu'),
 });
 export interface LoginProps {
   navigation: any;
 }
 export interface LoginForm {
-  email: string;
+  phone: string;
   password: string;
 }
 const Login = ({navigation}: LoginProps) => {
@@ -42,8 +46,15 @@ const Login = ({navigation}: LoginProps) => {
     navigation.navigate('Register');
   };
   const navigateToHome = (values: LoginForm) => {
-    console.log(values);
-    navigation.navigate('rootApp');
+    if (values.phone === '0869060808' && values.password === 'Linh123!@#') {
+      navigation.navigate('rootApp');
+    } else {
+      Alert.alert(
+        'Đăng nhập thất bại',
+        'Số điện thoại hoặc mật khẩu chưa đúng.Vui lòng thử lại',
+        [{text: 'OK', onPress: () => console.log('fsdfsdfs')}],
+      );
+    }
   };
   const navigateToForgotPassword = () => {
     navigation.navigate('ForgotPassword');
@@ -53,7 +64,7 @@ const Login = ({navigation}: LoginProps) => {
       <KeyboardAvoidingView>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: '', password: ''}}
+          initialValues={{phone: '', password: ''}}
           onSubmit={(values: LoginForm) => navigateToHome(values)}>
           {({
             handleChange,
@@ -65,21 +76,21 @@ const Login = ({navigation}: LoginProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập email hoặc SĐT"
+                placeholder="Vui lòng nhập số điện thoại đã đăng ký"
                 style={[
                   styles.viewInput,
-                  errors.email ? styles.errorsInput : null,
+                  errors.phone ? styles.errorsInput : null,
                 ]}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                value={values.phone}
+                keyboardType="phone-pad"
               />
-              {errors.email && (
-                <Text style={styles.errorsText}>{errors.email}</Text>
+              {errors.phone && (
+                <Text style={styles.errorsText}>{errors.phone}</Text>
               )}
               <TextInput
-                placeholder="Vui lòng nhập password"
+                placeholder="Vui lòng nhập mật khẩu"
                 style={[
                   styles.viewInput,
                   errors.password ? styles.errorsInput : null,
@@ -131,6 +142,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     // backgroundColor: COLORS.blue,
+    marginVertical: 60,
   },
   viewInput: {
     width: SIZES.width - 32,

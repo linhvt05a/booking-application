@@ -14,43 +14,34 @@ import {COLORS, SIZES} from '../../../constants';
 import * as yup from 'yup';
 
 const loginValidationSchema = yup.object().shape({
-  email: yup
+  phone: yup
     .string()
-    .email('Please enter valid email')
-    .required('Email Address is Required'),
-  password: yup
-    .string()
-    .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
-    .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
-    .matches(/\d/, 'Password must have a number')
     .matches(
-      /[!@#$%^&*()\-_"=+{}; :,<.>]/,
-      'Password must have a special character',
+      /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+      'Số điện thoại chưa đúng định dạng',
     )
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password is required'),
+    .required('Vui lòng nhập số điện thoại để đăng ký'),
 });
 export interface LoginProps {
   navigation: any;
 }
-export interface LoginForm {
-  email: string;
-  password: string;
+export interface RegisterForm {
+  phone: string;
 }
 const Register = ({navigation}: LoginProps) => {
   const navigateToRegisterScreens = () => {
     navigation.navigate('Login');
   };
-  const navigateToLogin = (values: LoginForm) => {
-    navigation.navigate('Login');
+  const navigateToLogin = (values: RegisterForm) => {
+    navigation.navigate('ConfirmOTP', {values});
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <KeyboardAvoidingView>
         <Formik
           validationSchema={loginValidationSchema}
-          initialValues={{email: '', password: ''}}
-          onSubmit={(values: LoginForm) => navigateToLogin(values)}>
+          initialValues={{phone: ''}}
+          onSubmit={(values: RegisterForm) => navigateToLogin(values)}>
           {({
             handleChange,
             handleBlur,
@@ -61,37 +52,23 @@ const Register = ({navigation}: LoginProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập email hoặc SĐT"
+                placeholder="Vui lòng nhập số điện thoại để đăng ký"
                 style={[
                   styles.viewInput,
-                  errors.email ? styles.errorsInput : null,
+                  errors.phone ? styles.errorsInput : null,
                 ]}
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
-                value={values.email}
-                keyboardType="email-address"
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                value={values.phone}
+                keyboardType="phone-pad"
               />
-              {errors.email && (
-                <Text style={styles.errorsText}>{errors.email}</Text>
-              )}
-              <TextInput
-                placeholder="Vui lòng nhập password"
-                style={[
-                  styles.viewInput,
-                  errors.password ? styles.errorsInput : null,
-                ]}
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
-                value={values.password}
-                secureTextEntry
-              />
-              {errors.password && (
-                <Text style={styles.errorsText}>{errors.password}</Text>
+              {errors.phone && (
+                <Text style={styles.errorsText}>{errors.phone}</Text>
               )}
               <TouchableOpacity
                 style={styles.loginButton}
                 onPress={handleSubmit}
-                disabled={!isValid}>
+                disabled={!isValid || values.phone === ''}>
                 <Text style={styles.txtLogin}>Đăng ký</Text>
               </TouchableOpacity>
             </>

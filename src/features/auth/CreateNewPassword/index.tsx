@@ -38,7 +38,18 @@ export interface CreatePasswordForm {
 }
 const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
   const navigateToLogin = (values: CreatePasswordForm) => {
-    Alert.alert('Tạo mật khẩu thành công. Vui lòng đăng nhập để sử dụng');
+    Alert.alert(
+      'Tạo mật khẩu',
+      'Mật khẩu của bạn đã được tạo thành công.Vui lòng đăng nhập để sử dụng',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'OK', onPress: () => navigation.navigate('Login')},
+      ],
+    );
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>

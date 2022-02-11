@@ -1,4 +1,5 @@
 import {
+  KeyboardAvoidingView,
   StyleSheet,
   Text,
   TextInput,
@@ -7,25 +8,69 @@ import {
 } from 'react-native';
 import React from 'react';
 import {COLORS, SIZES} from '../../../constants';
-
+import * as yup from 'yup';
+import {Formik} from 'formik';
+const loginValidationSchema = yup.object().shape({
+  phone: yup
+    .string()
+    .matches(
+      /^(\+\d{1,2}\s?)?1?\-?\.?\s?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/,
+      'Số điện thoại chưa đúng định dạng',
+    )
+    .required('Vui lòng nhập số điện thoại'),
+});
 export interface ForgotPasswordProps {
   navigation: any;
 }
+export interface ForgotPasswordForm {
+  phone: string;
+}
 const ForgotPassword = ({navigation}: ForgotPasswordProps) => {
-  const navigateToConfirmOTP = () => {
-    navigation.navigate('ConfirmOTP');
+  const navigateToConfirmOTP = (values: ForgotPasswordForm) => {
+    navigation.navigate('ConfirmOTP', {values});
   };
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Vui lòng nhập email hoặc SĐT để lấy lại mật khẩu..."
-        style={styles.viewInput}
-      />
-      <TouchableOpacity
-        style={styles.confirmButton}
-        onPress={navigateToConfirmOTP}>
-        <Text>Đồng ý</Text>
-      </TouchableOpacity>
+      <KeyboardAvoidingView>
+        <Formik
+          validationSchema={loginValidationSchema}
+          initialValues={{phone: ''}}
+          onSubmit={(values: ForgotPasswordForm) =>
+            navigateToConfirmOTP(values)
+          }>
+          {({
+            handleChange,
+            handleBlur,
+            handleSubmit,
+            values,
+            errors,
+            isValid,
+          }) => (
+            <>
+              <TextInput
+                placeholder="Vui lòng nhập số điện thoại để lấy lại mật khẩu..."
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                value={values.phone}
+                keyboardType="phone-pad"
+                style={[
+                  styles.viewInput,
+                  errors.phone ? styles.errorsInput : null,
+                ]}
+              />
+              {errors.phone && (
+                <Text style={styles.errorsText}>{errors.phone}</Text>
+              )}
+              <TouchableOpacity
+                disabled={!isValid}
+                style={styles.confirmButton}
+                onPress={handleSubmit}>
+                <Text>Đồng ý</Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </Formik>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -55,5 +100,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 8,
     marginVertical: 20,
+  },
+  errorsText: {
+    fontSize: SIZES.h4,
+    color: COLORS.red,
+  },
+  errorsInput: {
+    borderWidth: 1,
+    borderColor: COLORS.red,
   },
 });

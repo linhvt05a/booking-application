@@ -1,4 +1,5 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {COLORS, SIZES} from '../../../constants';
 import {
@@ -12,8 +13,11 @@ const CELL_COUNT = 6;
 const RESEND_OTP_TIME_LIMIT = 60;
 export interface ConfirmOTPProps {
   navigation: any;
+  route: any;
 }
-const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
+const ConfirmOTP = ({navigation, route}: ConfirmOTPProps) => {
+  console.log(route);
+  const {values} = route.params;
   let resendOtpTimerInterval: any;
   const [resendButtonDisabledTime, setResendButtonDisabledTime] = useState(
     RESEND_OTP_TIME_LIMIT,
@@ -49,7 +53,11 @@ const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
     setValue,
   });
   const navigateToCreateNewPassword = () => {
-    navigation.navigate('CreateNewPassword');
+    if (value === '111111') {
+      navigation.navigate('CreateNewPassword');
+    } else {
+      Alert.alert('Mã xác nhận không đúng.Vui lòng nhập lại');
+    }
   };
   useEffect(() => {
     startResendOtpTimer();
@@ -64,7 +72,7 @@ const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
     <View style={styles.container}>
       <Text>Bạn hãy nhập mã OTP được gửi đến số điện thoại: </Text>
       <View style={styles.viewPhone}>
-        <Text style={styles.txtPhone}>0869060808</Text>
+        <Text style={styles.txtPhone}>{values.phone}</Text>
         <TouchableOpacity>
           <Text style={styles.txtChangePhone}>Đổi số khác</Text>
         </TouchableOpacity>
@@ -90,7 +98,8 @@ const ConfirmOTP = ({navigation}: ConfirmOTPProps) => {
       />
       <TouchableOpacity
         style={styles.confirmButton}
-        onPress={navigateToCreateNewPassword}>
+        onPress={navigateToCreateNewPassword}
+        disabled={resendButtonDisabledTime === 0 || value === ''}>
         <Text>Tiếp tục</Text>
       </TouchableOpacity>
       {/* View for resend otp  */}
