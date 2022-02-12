@@ -7,7 +7,28 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    
+    "dev-android": "react-native run-android --variant=devDebug --appIdSuffix dev",
+    "dev-android-release-variant": "react-native run-android --variant=devRelease --appIdSuffix dev",
+    "dev-android-release": "cd android && ./gradlew clean && ./gradlew assembleDevRelease",
+
+    "qa-android": "react-native run-android --variant=qaDebug --appIdSuffix qa",
+    "qa-android-release-variant": "react-native run-android --variant=qaRelease --appIdSuffix qa",
+    "qa-android-release": "cd android && ./gradlew clean && ./gradlew assembleQaRelease",
+    
+    "prod-android": "react-native run-android --variant=prodDebug --appIdSuffix prod",
+    "prod-android-release-variant": "react-native run-android --variant=prodRelease --appIdSuffix prod",
+    "prod-android-release": "cd android && ./gradlew clean && ./gradlew assembleProdRelease",
+
+    "ios-dev-debug": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_DEV\"",
+    "ios-dev-release": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_DEV\"",
+
+    "ios-qa-debug": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_QA\"",
+    "ios-qa-release": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_QA\"",
+
+    "ios-prod-debug": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_PROD\"",
+    "ios-prod-release": "react-native run-ios --simulator=\"iPhone 12\" --scheme=\"booking_app_PROD\""
   },
   "dependencies": {
     "@react-native-community/async-storage": "^1.12.1",

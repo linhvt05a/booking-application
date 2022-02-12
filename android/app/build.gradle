@@ -1,7 +1,18 @@
 apply plugin: "com.android.application"
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-import com.android.build.OutputFile
 
+project.ext.envConfigFiles = [
+    release:".env.dev",
+    debug:".env.dev",
+    devdebug:".env.dev",
+    devrelease:".env.dev",
+    qadebug:".env.qa",
+    qarelease:".env.qa",
+    proddebug:".env.prod",
+    prodrelease:".env.prod"
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+import com.android.build.OutputFile
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
  * and bundleReleaseJsAndAssets).
@@ -77,6 +88,8 @@ import com.android.build.OutputFile
  * ]
  */
 
+
+
 project.ext.react = [
     enableHermes: false,  // clean and rebuild if changing
 ]
@@ -126,10 +139,34 @@ def enableHermes = project.ext.react.get("enableHermes", false);
 def nativeArchitectures = project.getProperties().get("reactNativeDebugArchitectures")
 
 android {
-    ndkVersion rootProject.ext.ndkVersion
-
     compileSdkVersion rootProject.ext.compileSdkVersion
-
+    flavorDimensions "default"
+      productFlavors {
+        dev {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.booking_app.dev"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.booking_app"
+            versionCode 1
+            versionName "1.0"
+        }
+        prod {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.booking_app.prod"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.booking_app"
+            versionCode 1
+            versionName "1.0"
+        }
+        qa {
+            minSdkVersion rootProject.ext.minSdkVersion
+            applicationId "com.booking_app.qa"
+            targetSdkVersion rootProject.ext.targetSdkVersion
+            resValue "string", "build_config_package", "com.booking_app"
+            versionCode 1
+            versionName "1.0"
+        }
+    }
     defaultConfig {
         applicationId "com.booking_app"
         minSdkVersion rootProject.ext.minSdkVersion
