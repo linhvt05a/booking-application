@@ -15,19 +15,19 @@ import {COLORS, SIZES} from '../../../constants';
 const loginValidationSchema = yup.object().shape({
   password: yup
     .string()
-    .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
-    .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
-    .matches(/\d/, 'Password must have a number')
+    .matches(/\w*[a-z]\w*/, 'Mật khẩu phải chứa ít nhất 1 chữ cái từ (a-z)')
+    .matches(/\w*[A-Z]\w*/, 'Mật khẩu phải chứa ít nhất 1 chữ cái in hoa (A-Z)')
+    .matches(/\d/, 'Mật khẩu phải chứa ít nhất 1 chữ số (0-9)')
     .matches(
       /[!@#$%^&*()\-_"=+{}; :,<.>]/,
-      'Password must have a special character',
+      'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (!@#$%^&*,...)',
     )
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
-    .required('Password is required'),
+    .min(8, ({min}) => `Mật khẩu phải có ít nhất ${min} ký tự`)
+    .required('Vui lòng nhập mật khẩu'),
   confirmPassword: yup
     .string()
-    .oneOf([yup.ref('password')], 'Passwords do not match')
-    .required('Confirm password is required'),
+    .oneOf([yup.ref('password')], 'Mật khẩu nhập vào không khớp')
+    .required('Vui lòng xác nhận lại mật khẩu'),
 });
 export interface CreateNewPasswordProps {
   navigation: any;
@@ -68,7 +68,7 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Mật khẩu ít nhất 8 ký tự "
+                placeholder="Nhập mật khẩu"
                 style={[
                   styles.viewInput,
                   errors.password ? styles.errorsInput : null,
@@ -77,12 +77,13 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
                 onBlur={handleBlur('password')}
                 value={values.password}
                 secureTextEntry
+                placeholderTextColor={COLORS.gray}
               />
               {errors.password && (
                 <Text style={styles.errorsText}>{errors.password}</Text>
               )}
               <TextInput
-                placeholder=" Nhập lại mật khẩu mới"
+                placeholder="Xác nhận mật khẩu"
                 style={[
                   styles.viewInput,
                   errors.confirmPassword ? styles.errorsInput : null,
@@ -91,6 +92,7 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
                 onBlur={handleBlur('confirmPassword')}
                 value={values.confirmPassword}
                 secureTextEntry
+                placeholderTextColor={COLORS.gray}
               />
               {errors.confirmPassword && (
                 <Text style={styles.errorsText}>{errors.confirmPassword}</Text>
@@ -125,6 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 10,
+    color: COLORS.black,
   },
   loginButton: {
     width: SIZES.width - 36,

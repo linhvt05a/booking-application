@@ -48,10 +48,11 @@ const ForgotPassword = ({navigation}: ForgotPasswordProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập số điện thoại để lấy lại mật khẩu..."
+                placeholder="Nhập số điện thoại để lấy lại mật khẩu"
                 onChangeText={handleChange('phone')}
                 onBlur={handleBlur('phone')}
                 value={values.phone}
+                placeholderTextColor={COLORS.gray}
                 keyboardType="phone-pad"
                 style={[
                   styles.viewInput,
@@ -91,6 +92,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 10,
+    color: COLORS.black,
   },
   confirmButton: {
     width: SIZES.width - 36,

@@ -11,7 +11,6 @@ import {
 } from '../../features/flightbooking/screens';
 
 const Tab = createBottomTabNavigator();
-
 const screenOptions = (
   route: RouteProp<ParamListBase, string>,
   color: string,

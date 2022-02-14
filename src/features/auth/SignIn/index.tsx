@@ -13,6 +13,9 @@ import {
 import * as yup from 'yup';
 import {ListSocialButton} from '../../../components';
 import {COLORS, SIZES} from '../../../constants';
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AuthenticationStackParamList} from '../../../navigations/types';
+type Props = NativeStackScreenProps<AuthenticationStackParamList, 'Register'>;
 
 const loginValidationSchema = yup.object().shape({
   phone: yup
@@ -24,30 +27,27 @@ const loginValidationSchema = yup.object().shape({
     .required('Vui lòng nhập số điện thoại'),
   password: yup
     .string()
-    .matches(/\w*[a-z]\w*/, 'Password must have a small letter')
-    .matches(/\w*[A-Z]\w*/, 'Password must have a capital letter')
-    .matches(/\d/, 'Password must have a number')
+    .matches(/\w*[a-z]\w*/, 'Mật khẩu phải chứa ít nhất 1 chữ cái từ (a-z)')
+    .matches(/\w*[A-Z]\w*/, 'Mật khẩu phải chứa ít nhất 1 chữ cái in hoa (A-Z)')
+    .matches(/\d/, 'Mật khẩu phải chứa ít nhất 1 chữ số (0-9)')
     .matches(
       /[!@#$%^&*()\-_"=+{}; :,<.>]/,
-      'Password must have a special character',
+      'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (!@#$%^&*)',
     )
-    .min(8, ({min}) => `Password must be at least ${min} characters`)
+    .min(8, ({min}) => `Mật khẩu phải có ít nhất ${min} ký tự`)
     .required('Vui lòng nhập mật khẩu'),
 });
-export interface LoginProps {
-  navigation: any;
-}
 export interface LoginForm {
   phone: string;
   password: string;
 }
-const Login = ({navigation}: LoginProps) => {
+const Login = ({navigation}: Props) => {
   const navigateToRegisterScreens = () => {
     navigation.navigate('Register');
   };
   const navigateToHome = (values: LoginForm) => {
     if (values.phone === '0869060808' && values.password === 'Linh123!@#') {
-      navigation.navigate('rootApp');
+      navigation.navigate('RootApp');
     } else {
       Alert.alert(
         'Đăng nhập thất bại',
@@ -76,7 +76,7 @@ const Login = ({navigation}: LoginProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập số điện thoại đã đăng ký"
+                placeholder="Nhập số điện thoại đã đăng ký"
                 style={[
                   styles.viewInput,
                   errors.phone ? styles.errorsInput : null,
@@ -85,16 +85,18 @@ const Login = ({navigation}: LoginProps) => {
                 onBlur={handleBlur('phone')}
                 value={values.phone}
                 keyboardType="phone-pad"
+                placeholderTextColor={COLORS.gray}
               />
               {errors.phone && (
                 <Text style={styles.errorsText}>{errors.phone}</Text>
               )}
               <TextInput
-                placeholder="Vui lòng nhập mật khẩu"
+                placeholder="Nhập mật khẩu"
                 style={[
                   styles.viewInput,
                   errors.password ? styles.errorsInput : null,
                 ]}
+                placeholderTextColor={COLORS.gray}
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
                 value={values.password}
@@ -123,7 +125,7 @@ const Login = ({navigation}: LoginProps) => {
         </View>
         <ListSocialButton />
         <View style={styles.viewAccount}>
-          <Text>Chưa có tài khoản?</Text>
+          <Text style={styles.txtDontAcc}>Chưa có tài khoản?</Text>
           <TouchableOpacity
             style={styles.btnRegister}
             onPress={navigateToRegisterScreens}>
@@ -153,6 +155,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 10,
+    color: COLORS.black,
   },
   loginButton: {
     width: SIZES.width - 36,
@@ -207,5 +210,8 @@ const styles = StyleSheet.create({
   errorsInput: {
     borderWidth: 1,
     borderColor: COLORS.red,
+  },
+  txtDontAcc: {
+    color: COLORS.black,
   },
 });

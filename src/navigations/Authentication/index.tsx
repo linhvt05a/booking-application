@@ -5,7 +5,6 @@ import CreateNewPassword from '../../features/auth/CreateNewPassword';
 import ForgotPassword from '../../features/auth/ForgotPassword';
 import Login from '../../features/auth/SignIn';
 import Register from '../../features/auth/SignUp';
-
 const AuthStack = createNativeStackNavigator();
 
 const Authentication = () => {

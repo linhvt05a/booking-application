@@ -70,7 +70,9 @@ const ConfirmOTP = ({navigation, route}: ConfirmOTPProps) => {
 
   return (
     <View style={styles.container}>
-      <Text>Bạn hãy nhập mã OTP được gửi đến số điện thoại: </Text>
+      <Text style={styles.txtOtp}>
+        Bạn hãy nhập mã OTP được gửi đến số điện thoại:{' '}
+      </Text>
       <View style={styles.viewPhone}>
         <Text style={styles.txtPhone}>{values.phone}</Text>
         <TouchableOpacity>
@@ -104,11 +106,13 @@ const ConfirmOTP = ({navigation, route}: ConfirmOTPProps) => {
       </TouchableOpacity>
       {/* View for resend otp  */}
       {resendButtonDisabledTime > 0 ? (
-        <Text>Gửi lại mã ({resendButtonDisabledTime}) giây</Text>
+        <Text style={styles.txtResendOtp}>
+          Gửi lại mã ({resendButtonDisabledTime}) giây
+        </Text>
       ) : (
         <TouchableOpacity onPress={onResendOtpButtonPress}>
           <View style={styles.resendCodeContainer}>
-            <Text>Gửi lại mã</Text>
+            <Text style={styles.txtResendOtp}>Gửi lại mã</Text>
           </View>
         </TouchableOpacity>
       )}
@@ -177,5 +181,11 @@ const styles = StyleSheet.create({
   resendCodeContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  txtOtp: {
+    color: COLORS.black,
+  },
+  txtResendOtp: {
+    color: COLORS.gray,
   },
 });

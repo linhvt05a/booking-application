@@ -15,7 +15,7 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="rootApp"
+          name="RootApp"
           component={TabNavigation}
           options={{headerShown: false}}
         />

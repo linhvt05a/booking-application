@@ -52,7 +52,7 @@ const Register = ({navigation}: LoginProps) => {
           }) => (
             <>
               <TextInput
-                placeholder="Vui lòng nhập số điện thoại để đăng ký"
+                placeholder="Nhập số điện thoại để đăng ký"
                 style={[
                   styles.viewInput,
                   errors.phone ? styles.errorsInput : null,
@@ -61,6 +61,7 @@ const Register = ({navigation}: LoginProps) => {
                 onBlur={handleBlur('phone')}
                 value={values.phone}
                 keyboardType="phone-pad"
+                placeholderTextColor={COLORS.gray}
               />
               {errors.phone && (
                 <Text style={styles.errorsText}>{errors.phone}</Text>
@@ -85,7 +86,7 @@ const Register = ({navigation}: LoginProps) => {
         </View>
         <ListSocialButton />
         <View style={styles.viewAccount}>
-          <Text>Bạn đã có tài khoản?</Text>
+          <Text style={styles.txtAcc}>Bạn đã có tài khoản?</Text>
           <TouchableOpacity
             style={styles.btnRegister}
             onPress={navigateToRegisterScreens}>
@@ -114,6 +115,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginVertical: 10,
+    color: COLORS.black,
   },
   loginButton: {
     width: SIZES.width - 36,
@@ -168,5 +170,8 @@ const styles = StyleSheet.create({
   errorsInput: {
     borderWidth: 1,
     borderColor: COLORS.red,
+  },
+  txtAcc: {
+    color: COLORS.black,
   },
 });
