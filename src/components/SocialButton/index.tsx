@@ -3,16 +3,30 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {COLORS, SIZES} from '../../constants';
 
-const ListSocialButton = () => {
+export interface ListSocialButtonProps {
+  onClickFaceBook?: () => void;
+  onClickGoogle?: () => void;
+  onClickApple?: () => void;
+  onClickTwitter?: () => void;
+}
+const ListSocialButton = ({
+  onClickFaceBook,
+  onClickGoogle,
+  onClickApple,
+  onClickTwitter,
+}: ListSocialButtonProps) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.btnSocial}>
-        <Ionicons name="logo-facebook" size={20} />
+        <Ionicons name="logo-facebook" size={20} onPress={onClickFaceBook} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnSocial}>
+      <TouchableOpacity style={styles.btnSocial} onPress={onClickGoogle}>
         <Ionicons name="logo-google" size={20} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.btnSocial}>
+      <TouchableOpacity style={styles.btnSocial} onPress={onClickApple}>
+        <Ionicons name="logo-apple" size={20} />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.btnSocial} onPress={onClickTwitter}>
         <Ionicons name="logo-apple" size={20} />
       </TouchableOpacity>
     </View>

@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as yup from 'yup';
-import {COLORS, SIZES} from '../../../constants';
+import {COLORS, SIZES} from '@src/constants';
 
 const loginValidationSchema = yup.object().shape({
   password: yup
@@ -37,7 +37,7 @@ export interface CreatePasswordForm {
   confirmPassword: string;
 }
 const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
-  const navigateToLogin = (values: CreatePasswordForm) => {
+  const navigateToLogin = () => {
     Alert.alert(
       'Tạo mật khẩu',
       'Mật khẩu của bạn đã được tạo thành công.Vui lòng đăng nhập để sử dụng',
@@ -57,7 +57,7 @@ const CreateNewPassword = ({navigation}: CreateNewPasswordProps) => {
         <Formik
           validationSchema={loginValidationSchema}
           initialValues={{confirmPassword: '', password: ''}}
-          onSubmit={(values: CreatePasswordForm) => navigateToLogin(values)}>
+          onSubmit={navigateToLogin}>
           {({
             handleChange,
             handleBlur,

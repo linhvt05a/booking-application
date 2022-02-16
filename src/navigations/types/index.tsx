@@ -1,5 +1,5 @@
 export type AuthenticationStackParamList = {
-  Login: undefined;
+  Login: {} | undefined;
   Register: undefined;
   ForgotPassword: undefined;
   ConfirmOTP: undefined;

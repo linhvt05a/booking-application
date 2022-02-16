@@ -1,3 +1,5 @@
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {AuthenticationStackParamList} from '@src/navigations/types';
 import {Formik} from 'formik';
 import React from 'react';
 import {
@@ -9,9 +11,10 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {ListSocialButton} from '../../../components';
-import {COLORS, SIZES} from '../../../constants';
+import {ListSocialButton} from '@src/components';
+import {COLORS, SIZES} from '@src/constants';
 import * as yup from 'yup';
+type Props = NativeStackScreenProps<AuthenticationStackParamList, 'Register'>;
 
 const loginValidationSchema = yup.object().shape({
   phone: yup
@@ -22,18 +25,15 @@ const loginValidationSchema = yup.object().shape({
     )
     .required('Vui lòng nhập số điện thoại để đăng ký'),
 });
-export interface LoginProps {
-  navigation: any;
-}
 export interface RegisterForm {
   phone: string;
 }
-const Register = ({navigation}: LoginProps) => {
+const Register = ({navigation}: Props) => {
   const navigateToRegisterScreens = () => {
     navigation.navigate('Login');
   };
   const navigateToLogin = (values: RegisterForm) => {
-    navigation.navigate('ConfirmOTP', {values});
+    navigation.navigate('Login', {values});
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>

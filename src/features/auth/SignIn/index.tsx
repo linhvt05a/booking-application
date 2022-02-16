@@ -1,3 +1,9 @@
+import type {NativeStackScreenProps} from '@react-navigation/native-stack';
+import ListSocialButton from '@src/components/SocialButton';
+import {COLORS, SIZES} from '@src/constants';
+import {onAppleButtonPress} from '@src/features/socialAuth/appleAuth';
+import {onFacebookButtonPress} from '@src/features/socialAuth/facebookAuth';
+import {AuthenticationStackParamList} from '@src/navigations/types';
 import {Formik} from 'formik';
 import React from 'react';
 import {
@@ -11,11 +17,7 @@ import {
   View,
 } from 'react-native';
 import * as yup from 'yup';
-import {ListSocialButton} from '../../../components';
-import {COLORS, SIZES} from '../../../constants';
-import type {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {AuthenticationStackParamList} from '../../../navigations/types';
-type Props = NativeStackScreenProps<AuthenticationStackParamList, 'Register'>;
+type Props = NativeStackScreenProps<AuthenticationStackParamList, 'Login'>;
 
 const loginValidationSchema = yup.object().shape({
   phone: yup
@@ -58,6 +60,12 @@ const Login = ({navigation}: Props) => {
   };
   const navigateToForgotPassword = () => {
     navigation.navigate('ForgotPassword');
+  };
+  const appleLogin = () => {
+    onAppleButtonPress();
+  };
+  const facebookLogin = () => {
+    onFacebookButtonPress();
   };
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -123,7 +131,10 @@ const Login = ({navigation}: Props) => {
         <View style={styles.viewText}>
           <Text style={styles.txtLoginWith}>hoặc sử dụng</Text>
         </View>
-        <ListSocialButton />
+        <ListSocialButton
+          onClickApple={appleLogin}
+          onClickFaceBook={facebookLogin}
+        />
         <View style={styles.viewAccount}>
           <Text style={styles.txtDontAcc}>Chưa có tài khoản?</Text>
           <TouchableOpacity

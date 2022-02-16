@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {COLORS, SIZES} from '../../../constants';
+import {COLORS, SIZES} from '@src/constants';
 import * as yup from 'yup';
 import {Formik} from 'formik';
 const loginValidationSchema = yup.object().shape({

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {COLORS, SIZES} from '../../../constants';
+import {COLORS, SIZES} from '@src/constants';
 import {
   CodeField,
   Cursor,
